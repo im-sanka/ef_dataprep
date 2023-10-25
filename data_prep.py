@@ -24,9 +24,7 @@ def main():
     col1, col2 = st.columns(2)
     uploaded_file = col1.file_uploader("Choose a CSV or Excel file", type=['csv', 'xlsx'])
 
-    if uploaded_file is not None:
-
-        
+    if uploaded_file is not None:        
 
         df = read_file(uploaded_file)
         original_col_names = df.columns.tolist()
