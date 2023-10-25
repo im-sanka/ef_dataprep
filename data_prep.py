@@ -57,5 +57,5 @@ def main():
             )
 
 if __name__ == "__main__":
-    st.set_page_config(layout='wide')
+    st.set_page_config(layout='wide', page_title='Data preparation', page_icon='🌐')
     main()
