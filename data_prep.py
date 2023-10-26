@@ -10,7 +10,7 @@ def read_file(file):
     elif ';' in first_line:
         delimiter = ';'
     else:
-        st.error('Unsupported file format. Please use a CSV file with either comma or semicolon as the delimiter.')
+        col2.error('Unsupported file format. Please use a CSV file with either comma or semicolon as the delimiter.')
         return None
 
     if file.type == 'text/csv':
@@ -22,35 +22,38 @@ def read_file(file):
 def main():
     st.title("Mini App for EasyFlow")
     col1, col2 = st.columns(2)
-    uploaded_file = col1.file_uploader("Choose a CSV or Excel file", type=['csv', 'xlsx'])
+    col2.subheader(':blue[Upload your data here!]')
+    uploaded_file = col2.file_uploader("Choose a CSV or Excel file", type=['csv', 'xlsx'])
 
+    col1.info(":red[**Important note**:] If you don't have the correct format for EasyFlow such as the requirement below, you can use this miniapp to make one with your .csv or .xlsx data. ")
+    col1.image('labelsize.png')
     if uploaded_file is not None:        
 
         df = read_file(uploaded_file)
         original_col_names = df.columns.tolist()
 
-        st.write("### Select Columns")
+        col2.write("### Select Columns")
 
-        label_col = col1.selectbox("Select :red[ Label] Column", original_col_names, key='1')
+        label_col = col2.selectbox("Select :red[ Label] Column", original_col_names, key='1')
 
         col_names_2 = [col for col in original_col_names if col != label_col]
-        volume_col = col1.selectbox('Select :red[Volume/ Size] Column', col_names_2, key='2')
+        volume_col = col2.selectbox('Select :red[Volume/ Size] Column', col_names_2, key='2')
 
         col_names_3 = [col for col in col_names_2 if col != volume_col]
-        intensity_col = col1.selectbox('Select :red[Pixel Intensity] Column', col_names_3, key='3')
+        intensity_col = col2.selectbox('Select :red[Pixel Intensity] Column', col_names_3, key='3')
 
-        if st.button("Show Data"):
+        if col2.button("Show Data"):
             processed_df = df[[label_col, volume_col, intensity_col]]
-            st.write(processed_df.head(10))
+            col2.write(processed_df.head(3))
 
-            st.write("### Download Processed Data")
+            col1.write("### Download Processed Data")
 
             csv = processed_df.to_csv(index=False)
 
-            name_file = st.text_input("Name your file here:", "ready_for_easyflow")
+            name_file = col1.text_input("Name your file here:", "ready_for_easyflow")
 
-            st.download_button(
-                label="Download CSV File",
+            col1.download_button(
+                label="Download ready file for EasyFlow!",
                 data=csv,
                 file_name=f"{name_file}.csv",
                 mime="text/csv"
